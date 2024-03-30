@@ -1,5 +1,5 @@
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { getAssociatedTokenAddressSync } from "@solana/spl-token";
 
 import * as anchor from "@coral-xyz/anchor";
@@ -31,33 +31,23 @@ import { findMasterEditionPda, findMetadataPda, mplTokenMetadata, MPL_TOKEN_META
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 const programId = new PublicKey(idl.metadata.address);
 
 const opts: { preflightCommitment: Commitment } = {
     preflightCommitment: "processed",
 };
 
-export const MintNFTButton = ({ mint: mintKeypair }: { mint: Keypair }) => {
+export const MintNFTButton = ({ mint: mintKeypair , ifNftTransfered:ifNftTransfered, setifNftTransfered:setifNftTransfered } : { mint: Keypair ,ifNftTransfered: boolean; setifNftTransfered: any;  }) => {
     const [txSig, setTxSig] = useState("");
     const [loading, setLoading] = useState(false);
     const [nftDetails, setNftDetails] = useState<Sft | Nft | null>(null);
-
     // new stats
     const [allNftByWallet, setAllNftByWallet] = useState<any>();
 
-    console.log("allNftByWallet",allNftByWallet)
+    console.log("allNftByWallet",allNftByWallet);
+
+    console.log("mintpair",)
+
 
     const { connection } = useConnection();
     const wallet = useWallet();
@@ -68,6 +58,12 @@ export const MintNFTButton = ({ mint: mintKeypair }: { mint: Keypair }) => {
         return txSig ? `https://explorer.solana.com/tx/${txSig}?cluster=devnet` : "";
     };
     // const program = anchor.workspace?.PdaMintAuthority as Program<PdaMintAuthority>;
+
+
+
+
+
+
 
     const getProgram = () => {
         /* create the provider and return it to the caller */
@@ -85,7 +81,7 @@ export const MintNFTButton = ({ mint: mintKeypair }: { mint: Keypair }) => {
 	const umi = createUmi("https://api.devnet.solana.com").use(walletAdapterIdentity(wallet)).use(mplTokenMetadata());
 	//const mint = anchor.web3.Keypair.generate();
 
-	const associatedTokenAccount = getAssociatedTokenAddressSync(
+	const associatedTokenAccount = wallet.publicKey !== null &&  getAssociatedTokenAddressSync(
 		mintKeypair.publicKey,
 		wallet.publicKey
 	);
@@ -201,7 +197,7 @@ export const MintNFTButton = ({ mint: mintKeypair }: { mint: Keypair }) => {
                     </div>
                     <div className="w-full max-w-xs ">
                         <p className="text-xl mt-4 mb-4 font-light">Here is your minted NFT</p>
-                        <NFTCard nftDetails={nftDetails} mint={mintKeypair} />
+                        <NFTCard nftDetails={nftDetails} mint={mintKeypair} ifNftTransfered={ifNftTransfered} setifNftTransfered={setifNftTransfered} />
                     </div>
                 </div>
             ) : null}

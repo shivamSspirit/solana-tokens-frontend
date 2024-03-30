@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { use, useEffect } from "react";
+import React, { useEffect } from "react";
 import * as anchor from "@coral-xyz/anchor";
 import { useWallet, useConnection } from "@solana/wallet-adapter-react";
 import { useState } from "react";
@@ -18,6 +18,7 @@ import { Nft, Sft, Metaplex } from "@metaplex-foundation/js";
 import { set } from "date-fns";
 import { LinkIcon, Loader } from "components/Icons";
 import { BN } from "bn.js";
+import { MintNFTButton } from "components/MintNFTButton";
 
 
 /* eslint-disable @next/next/no-img-element */
@@ -39,7 +40,8 @@ const opts: { preflightCommitment: Commitment } = {
 
 const programId = new PublicKey(idl.metadata.address);
 
-export const NFTCard = ({ mint, nftDetails }: { mint: Keypair; nftDetails: Sft | Nft }) => {
+export const NFTCard = ({ mint, nftDetails, ifNftTransfered, setifNftTransfered }: { mint: Keypair; nftDetails: Sft | Nft; ifNftTransfered:boolean; setifNftTransfered:any;  }) => {
+    console.log("nft details", nftDetails)
     const [buyer, setBuyer] = useState("");
     const [loading, setLoading] = useState(false);
     const [txSig, setTxSig] = useState<string | null>(null);
@@ -49,6 +51,13 @@ export const NFTCard = ({ mint, nftDetails }: { mint: Keypair; nftDetails: Sft |
     const wallet = useWallet();
 
     const { publicKey, sendTransaction } = useWallet();
+
+    useEffect(()=>{
+        if(txSig){
+            setifNftTransfered(true);
+        }
+
+    },[txSig])
 
     const link = () => {
         return txSig ? `https://explorer.solana.com/tx/${txSig}?cluster=devnet` : "";
@@ -131,7 +140,7 @@ export const NFTCard = ({ mint, nftDetails }: { mint: Keypair; nftDetails: Sft |
 
     return (
         <div>
-            <div className="card bg-white border-white bg-blur bg-opacity-30 rounded-lg ">
+            {ifNftTransfered?<div>YOu need to mint an NFt</div>:<div className="card bg-white border-white bg-blur bg-opacity-30 rounded-lg ">
                 <img className="max-h-80 w-auto" alt="nft img" src={nftDetails.json.image} />
                 <div className="p-4 pt-4 flex flex-col gap-y-4">
                     <div className="font-bold text-lg ">{nftDetails.json.symbol}</div>
@@ -152,7 +161,8 @@ export const NFTCard = ({ mint, nftDetails }: { mint: Keypair; nftDetails: Sft |
                         </button>
                     )}
                 </div>
-            </div>
+            </div>}
+            
             {txSig ? (
                 <div className="flex flex-col gap-y-2 mt-4">
                     <p>
