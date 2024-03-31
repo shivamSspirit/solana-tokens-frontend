@@ -2,6 +2,7 @@ import dynamic from "next/dynamic";
 import React, { useState } from "react";
 import { useAutoConnect } from "../contexts/AutoConnectProvider";
 import NetworkSwitcher from "./NetworkSwitcher";
+import Link from "next/link";
 
 const WalletMultiButtonDynamic = dynamic(
     async () => (await import("@solana/wallet-adapter-react-ui")).WalletMultiButton,
@@ -16,16 +17,18 @@ export const AppBar: React.FC = () => {
             {/* NavBar / Header */}
             <div className="mx-auto border border-gray-600 max-w-7xl flex justify-between sticky top-5 px-4 py-3 rounded-md bg-opacity-10 bg-blur z-20 bg-white">
                 <div className="navbar-start justify-center flex flex-col">
-                    <div className="hidden sm:inline ml-2 my-auto font-semibold text-xl">Solana NFTs</div>
-                    
-                    <WalletMultiButtonDynamic className="btn-ghost btn-sm relative flex md:hidden text-lg " />
+                    <div className="inline ml-2 my-auto font-semibold text-xl"><Link href={'/'}>Solana Spl Token Program</Link></div>
+                    <div className="hidden sm:inline my-auto font-semibold text-xl">
+                    {/* <WalletMultiButtonDynamic className="btn-ghost btn-sm relative flex md:hidden text-lg " />  */}
+                    </div>
+                   
                 </div>
 
                 {/* Nav Links */}
                 {/* Wallet & Settings */}
                 <div className="navbar-end flex gap-x-4">
-                    <div className="hidden md:inline-flex align-items-center items-center justify-items gap-6">
-                        <WalletMultiButtonDynamic className="btn-ghost btn-sm rounded-btn text-lg my-auto" />
+                    <div className="inline-flex align-items-center items-center justify-items gap-6">
+                         <WalletMultiButtonDynamic className="btn-ghost btn-sm rounded-btn text-lg my-auto" /> 
                     </div>
                     <div className="w-1 bg-gray-500 h-full rounded-full hidden md:inline-flex "></div>
                     <div className="dropdown dropdown-end">

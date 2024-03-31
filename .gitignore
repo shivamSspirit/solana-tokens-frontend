@@ -39,3 +39,5 @@ yarn-error.log*
 
 # logs
 *.log
+
+.DS_Store
